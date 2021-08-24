@@ -10,7 +10,7 @@ extern "C"
 #include <assert.h>
 #include "spi_api.h"
 #include "spi.h"
-    class spi : spi_api
+    class spi : public spi_api
     {
         SPI_HandleTypeDef *handle;
         GPIO_TypeDef *nssPort;
@@ -19,13 +19,13 @@ extern "C"
     public:
         spi(SPI_HandleTypeDef *port_handle, GPIO_TypeDef *nss_port, uint16_t nss_pin);
 
-        void start();
+        void start() override;
 
-        void stop();
+        void stop() override;
 
-        void sendByte(uint8_t byte);
+        void sendByte(uint8_t byte) override;
 
-        uint8_t receiveByte();
+        uint8_t receiveByte() override;
     };
 
 #ifdef __cplusplus

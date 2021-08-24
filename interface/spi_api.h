@@ -11,13 +11,13 @@ extern "C"
 
     struct spi_api
     {
-        void start();
+        virtual void start() = 0;
 
-        void stop();
+        virtual void stop() = 0;
 
-        void sendByte(uint8_t byte);
+        virtual void sendByte(uint8_t byte) = 0;
 
-        uint8_t receiveByte();
+        virtual uint8_t receiveByte() = 0;
     };
 
 #ifdef __cplusplus
