@@ -24,7 +24,7 @@ extern "C"
 
             void stop();
 
-            void sendByte(int byte);
+            void sendByte(uint8_t byte);
 
             uint8_t receiveByte();
         };

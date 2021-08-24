@@ -17,10 +17,9 @@ namespace spi
         HAL_GPIO_WritePin(nssPort, nssPin, GPIO_PIN_SET);
     }
 
-    void port::sendByte(int byte)
+    void port::sendByte(uint8_t byte)
     {
-        uint8_t byteU = byte;
-        assert(HAL_SPI_Transmit(handle, &byteU, 1, HAL_MAX_DELAY) == HAL_OK);
+        assert(HAL_SPI_Transmit(handle, &byte, 1, HAL_MAX_DELAY) == HAL_OK);
     }
 
     uint8_t port::receiveByte()
