@@ -52,7 +52,7 @@ extern "C"
         void togglePin(uint8_t pin);
 
         // checks gpio register for correct values
-        bool fixIntegrity();
+        bool fixIntegrity(int tries);
     };
 
 #ifdef __cplusplus
