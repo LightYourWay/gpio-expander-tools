@@ -37,7 +37,7 @@ extern "C"
         int hardware_addr;
 
     public:
-        int integrityFault = 0;
+        int integrityFaultCount = 0;
 
         mcp23xxx(spi_api *spi_handle, uint8_t hardware_address = 0);
 
@@ -52,7 +52,7 @@ extern "C"
         void togglePin(uint8_t pin);
 
         // checks gpio register for correct values
-        void fixIntegrity();
+        bool fixIntegrity();
     };
 
 #ifdef __cplusplus

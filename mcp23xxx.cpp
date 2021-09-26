@@ -79,11 +79,21 @@ void mcp23xxx::togglePin(uint8_t pin)
     writeRegister(MCP23XXX_GPIO, gpio);
 }
 
-void mcp23xxx::fixIntegrity()
+bool mcp23xxx::fixIntegrity()
 {
-    while (readRegister(MCP23XXX_GPIO) != gpio)
+    // trying to fix the integrity of the registry 10x times
+    for (int i = 0; i < 10; i++)
     {
-        writeRegister(MCP23XXX_GPIO, gpio);
-        integrityFault++;
+        if (readRegister(MCP23XXX_GPIO) != gpio)
+        {
+            writeRegister(MCP23XXX_GPIO, gpio);
+            // count the number of times the registry was tried to be fixed
+            integrityFaultCount++;
+        } else {
+            // chip has been sucessfully fixed within 10 tries
+            return true;
+        }
     }
+    // chip has not been fixed within 10 tries
+    return false;
 }
