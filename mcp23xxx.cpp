@@ -1,14 +1,8 @@
 #include "mcp23xxx.h"
 
-// define local registers to prevent reading error from causing serious damage
-// this does not affect the low level reading and writing register functions
-#define LOCALREGISTERS
-
-#ifdef LOCALREGISTERS
 // initialize the registers locally to default values
 uint8_t iodir = 0b00000000;
 uint8_t gpio = 0b00000000;
-#endif
 
 mcp23xxx::mcp23xxx(spi_api *spi_handle, uint8_t hardware_address) : spiHandle(*spi_handle), hardware_addr(hardware_address)
 {
@@ -83,4 +77,13 @@ void mcp23xxx::togglePin(uint8_t pin)
 
     gpio ^= (1 << pin);
     writeRegister(MCP23XXX_GPIO, gpio);
+}
+
+void mcp23xxx::fixIntegrity()
+{
+    while (readRegister(MCP23XXX_GPIO) != gpio)
+    {
+        writeRegister(MCP23XXX_GPIO, gpio);
+        integrityFault++;
+    }
 }

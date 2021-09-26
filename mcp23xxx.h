@@ -25,14 +25,21 @@ extern "C"
 // define values
 #define OUTPUT 0
 #define INPUT 1
+
+// define local registers to prevent reading error from causing serious damage
+// this does not affect the low level reading and writing register functions
+#define LOCALREGISTERS
+
     class mcp23xxx
     {
         int OpCode = 0b01000;
-        spi_api& spiHandle;
+        spi_api &spiHandle;
         int hardware_addr;
 
     public:
-        mcp23xxx(spi_api* spi_handle, uint8_t hardware_address = 0);
+        int integrityFault = 0;
+
+        mcp23xxx(spi_api *spi_handle, uint8_t hardware_address = 0);
 
         void writeRegister(uint8_t register_addr, uint8_t data);
 
@@ -41,8 +48,11 @@ extern "C"
         void pinMode(uint8_t pin, bool mode);
 
         void writePin(uint8_t pin, bool value);
-        
+
         void togglePin(uint8_t pin);
+
+        // checks gpio register for correct values
+        void fixIntegrity();
     };
 
 #ifdef __cplusplus
