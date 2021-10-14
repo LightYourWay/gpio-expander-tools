@@ -28,13 +28,23 @@ extern "C"
 
 // define local registers to prevent reading error from causing serious damage
 // this does not affect the low level reading and writing register functions
-#define LOCALREGISTERS
+// #define LOCALREGISTERS
+
+    struct result
+    {
+        bool fixable;
+        bool hadError;
+    };
 
     class mcp23xxx
     {
         int OpCode = 0b01000;
         spi_api &spiHandle;
         int hardware_addr;
+
+        // initialize the registers locally to default values
+        uint8_t iodir = 0b00000000;
+        uint8_t gpio = 0b00000000;
 
     public:
         int integrityFaultCount = 0;
@@ -49,10 +59,12 @@ extern "C"
 
         void writePin(uint8_t pin, bool value);
 
+        bool readPin(uint8_t pin);
+
         void togglePin(uint8_t pin);
 
         // checks gpio register for correct values
-        bool fixIntegrity(int tries);
+        result fixIntegrity(int tries);
     };
 
 #ifdef __cplusplus
