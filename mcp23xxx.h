@@ -45,6 +45,9 @@ extern "C"
         // initialize the registers locally to default values
         uint8_t iodir = 0b00000000;
         uint8_t gpio = 0b00000000;
+        uint8_t gpinten = 0b00000000;
+        uint8_t defval = 0b00000000;
+        uint8_t intcon = 0b00000000;
 
     public:
         int integrityFaultCount = 0;
@@ -56,6 +59,8 @@ extern "C"
         uint8_t readRegister(uint8_t register_addr);
 
         void pinMode(uint8_t pin, bool mode);
+
+        void enableInterrupt(uint8_t pin, bool default_value = 0, bool comparator_value = 0);
 
         void writePin(uint8_t pin, bool value);
 

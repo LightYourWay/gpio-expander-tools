@@ -44,6 +44,47 @@ void mcp23xxx::pinMode(uint8_t pin, bool mode)
     writeRegister(MCP23XXX_IODIR, this->iodir);
 }
 
+void mcp23xxx::enableInterrupt(uint8_t pin, bool default_value, bool comparator_value)
+{
+#ifndef LOCALREGISTERS
+    // read the current register value
+    this->defval = readRegister(MCP23XXX_DEFVAL);
+#endif
+
+    if (default_value)
+    {
+        this->defval |= (1 << pin);
+    }
+    else
+    {
+        this->defval &= ~(1 << pin);
+    }
+    writeRegister(MCP23XXX_DEFVAL, this->defval);
+
+#ifndef LOCALREGISTERS
+    // read the current register value
+    this->intcon = readRegister(MCP23XXX_DEFVAL);
+#endif
+
+    if (comparator_value)
+    {
+        this->intcon |= (1 << pin);
+    }
+    else
+    {
+        this->intcon &= ~(1 << pin);
+    }
+    writeRegister(MCP23XXX_INTCON, this->intcon);
+
+#ifndef LOCALREGISTERS
+    // read the current register value
+    this->gpinten = readRegister(MCP23XXX_GPINTEN);
+#endif
+
+    this->gpinten |= (1 << pin);
+    writeRegister(MCP23XXX_GPINTEN, this->gpinten);
+}
+
 void mcp23xxx::writePin(uint8_t pin, bool value)
 {
 
@@ -94,11 +135,13 @@ result mcp23xxx::fixIntegrity(int tries)
 
             // count the number of times the registry was tried to be fixed
             integrityFaultCount++;
-        } else {
+        }
+        else
+        {
             // chip has been sucessfully fixed within defined number of tries
-            return result {true, hadError};
+            return result{true, hadError};
         }
     }
     // chip has not been fixed within defined number of tries
-    return result {false, hadError};
+    return result{false, hadError};
 }
